@@ -75,7 +75,58 @@ const fiveDayForecast = data.list
 .filter((forecast, index) => index % 8 === 0 || index === 39)
 .slice(1, 6);
 
+const forecastCardContainer = document.createElement("div");
+forecastCardContainer.className = "row";
 
+fiveDayForecast.forEach((forecast) => {
+    const date = new Date(forecast.dt_txt);
+    const formatteDate = date.toLocaleDateString();
 
+    const weatherCondition = forecast.weather[0].description.toLowerCase();
 
+    // Determine the icon based on weather condition
+    let iconClass = getWeatherIcon(weatherCondition);
+
+    const forecastCard = document.createElement("div");
+    forecastCard.className = "col-md-2 mb-3";
+    forecast.innerHTML = `
+    <div class="card forecast-card">
+    <div class="card-body text-white" style="background-color: #343a40;">
+    <h5 class="card-title">${formatteDate}</h5>
+    <i class="${iconClass} fs-3"></i>
+    <p class="card-text">Temp: ${forecast.main.temp} K</p>
+    <p class="card-text">Wind: ${forecast.wind.speed} m/s</p>
+    <p class="card-text">Humidity: ${forecast.main.humidity}%</p>
+    </div>
+    </div>
+    `;
+    forecastCardContainer.appendChild(forecastCard);
+});
+
+weatherInfoContainer.appendChild(forecastCardContainer);
+
+}
+
+function getWeatherIcon(weatherCondition) {
+    let iconClass = "";
+
+    if (weatherCondition.includs("clear")) {
+        iconClass = "bi bi-sun";
+    } else if (weatherCondition.includes("clouds")) {
+        iconClass = "bi bi-cloud";
+    } else if (weatherCondition.includes("rain")) {
+        iconClass = "bi bi-rain";
+    } else if (weatherCondition.includes("snow")) {
+        iconClass = "bi bi-snow";
+    } else if (weatherCondition.includes("drizzle")) {
+        iconClass = "bi bi-cloud-drizzles";
+    } else if (
+        weatherCondition.includes("mist") ||
+        weatherCondition.includes("fog")
+    ) {
+        iconClass = "bi bi-fog";
+    } else {
+        iconClass = "bi bi-question";
+    }
+    return iconClass;
 }
