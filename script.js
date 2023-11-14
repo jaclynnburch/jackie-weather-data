@@ -47,4 +47,35 @@ function displyaWeatherInfo(data) {
 
     const todayForecast = data.list [0];
     const weatherCondition = todayForecast.weather[0].description.toLowerCase();
+
+    // Determine the icon based on weather condition
+const iconClass = getWeatherIcon(weatherCondition);
+const todayDate = new Date(todayForecast.dt_txt);
+const todayForecastInfo = document.createElement("div");
+todayForecastInfo.className = "border py-3 px-1";
+todayForecastInfo.innerHTML = `
+<div class ="d-flex gap-3">
+    <h2> ${
+        data.city.name
+    } (${todayDate.toLocaleDateString()})</h2><i class="${iconClass} fs-3"></i>
+    </div>
+    <p>Temp: ${todayForecast.main.temp} K</p>
+<p>Wind: ${todayForecast.wind.speed} m/s</p>`;
+
+weatherInfoContainer.appendChild(todayForecastInfo);
+
+// Display heading for 5-day forecast
+const forecastHeading = document.createElement("h2");
+forecastHeading.className = "pt-3";
+forecastHeading.textContent= "5-Day Forecast";
+weatherInfoContainer.appendChild(forecastHeading);
+
+//Filter the forecast data for the next 5 days
+const fiveDayForecast = data.list
+.filter((forecast, index) => index % 8 === 0 || index === 39)
+.slice(1, 6);
+
+
+
+
 }
