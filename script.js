@@ -25,4 +25,26 @@ function handleSearch(event) {
 
   async function fetchWeatherData(cityName) {
     const apiKey = "6b113faae5c375b923daf36b5859653e"
-  }
+
+    try {
+        const response = await fetch(
+            `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}`
+        );
+        const data = await response.json();
+
+        if (data.cod === "200") {
+            updateSearchHistory(cityName);
+            displyaWeatherInfo(data);
+        }
+    } catch (error) {
+
+    }
+}
+
+function displyaWeatherInfo(data) {
+    const weatherInfoContainer = document.getElemeentByID("weatherInfo");
+    weatherInfoContainer.innerHTML = ""; // Clear previous content
+
+    const todayForecast = data.list [0];
+    const weatherCondition = todayForecast.weather[0].description.toLowerCase();
+}
